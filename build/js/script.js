@@ -1,113 +1,117 @@
 $(function () {
-  let headerContent = document.querySelector('.header-content')
-  let nav = document.querySelector('.site-nav')
-  let headerCue = document.querySelector('.header-cue')
-  let meetMonsters = document.querySelector('#meet')
-  let monsterScroll = document.querySelectorAll('#monster-group .monster')
-  let navHeight = nav.scrollHeight
+	let headerContent = document.querySelector(".header-content");
+	let nav = document.querySelector(".site-nav");
+	let headerCue = document.querySelector(".header-cue");
+	let meetMonsters = document.querySelector("#meet");
+	let monsterScroll = document.querySelectorAll("#monster-group .monster");
+	let navHeight = nav.scrollHeight;
 
-  monsterScroll.forEach(
-    (item) => (item.style.animationDelay = `${Math.random() * 1 + 0.4}s`)
-  )
+	// TODO: #3 Rename these variables to make them clearer
 
-  function inViewPort(el) {
-    let rect = el.getBoundingClientRect()
-    return (
-      (rect.top <= 0 && rect.bottom >= 0) ||
-      (rect.bottom >= window.innerHeight && rect.top <= window.innerHeight) ||
-      (rect.top >= 0 && rect.bottom <= window.innerHeight)
-    )
-  }
+	https: monsterScroll.forEach(
+		item => (item.style.animationDelay = `${Math.random() * 1 + 0.4}s`)
+	);
 
-  function moveHeader() {
-    let top = window.pageYOffset
-    let mainOnTop = meetMonsters.getBoundingClientRect().top - navHeight
+	//github.com/urbro3/vscodegit/blob/vite-config/build/js/script.js#L8
 
-    mainOnTop < 0
-      ? nav.classList.add('in-body')
-      : nav.classList.remove('in-body')
+	function inViewPort(el) {
+		let rect = el.getBoundingClientRect();
+		return (
+			(rect.top <= 0 && rect.bottom >= 0) ||
+			(rect.bottom >= window.innerHeight && rect.top <= window.innerHeight) ||
+			(rect.top >= 0 && rect.bottom <= window.innerHeight)
+		);
+	}
 
-    let currentCuePosition = headerContent.getBoundingClientRect().top
+	function moveHeader() {
+		let top = window.pageYOffset;
+		let mainOnTop = meetMonsters.getBoundingClientRect().top - navHeight;
 
-    currentCuePosition < 0
-      ? headerCue.classList.add('d-none')
-      : headerCue.classList.remove('d-none')
+		mainOnTop < 0
+			? nav.classList.add("in-body")
+			: nav.classList.remove("in-body");
 
-    headerContent.style.transform = `translateY(-${top / 1.5}px)`
-    headerContent.style.opacity =
-      1 - Math.max(top / (window.innerHeight * 0.2), 0)
+		let currentCuePosition = headerContent.getBoundingClientRect().top;
 
-    monsterScroll.forEach((item) =>
-      inViewPort(item)
-        ? item.classList.add('appear')
-        : item.classList.remove('appear')
-    )
+		currentCuePosition < 0
+			? headerCue.classList.add("d-none")
+			: headerCue.classList.remove("d-none");
 
-    window.requestAnimationFrame(moveHeader)
-  }
+		headerContent.style.transform = `translateY(-${top / 1.5}px)`;
+		headerContent.style.opacity =
+			1 - Math.max(top / (window.innerHeight * 0.2), 0);
 
-  window.requestAnimationFrame(moveHeader)
+		monsterScroll.forEach(item =>
+			inViewPort(item)
+				? item.classList.add("appear")
+				: item.classList.remove("appear")
+		);
 
-  let controller = new ScrollMagic.Controller()
-  let friendTextTween = TweenMax.from('.friend-text', {
-    y: 400,
-    opacity: 0,
-  })
+		window.requestAnimationFrame(moveHeader);
+	}
 
-  new ScrollMagic.Scene({
-    triggerElement: '#friend',
-    duration: '100%',
-    triggerHook: 0,
-  })
-    .setTween(friendTextTween)
-    .setPin('#friend')
-    .addTo(controller)
+	window.requestAnimationFrame(moveHeader);
 
-  // Parachute
+	let controller = new ScrollMagic.Controller();
+	let friendTextTween = TweenMax.from(".friend-text", {
+		y: 400,
+		opacity: 0,
+	});
 
-  let parachuteTween = new TimelineMax()
+	new ScrollMagic.Scene({
+		triggerElement: "#friend",
+		duration: "100%",
+		triggerHook: 0,
+	})
+		.setTween(friendTextTween)
+		.setPin("#friend")
+		.addTo(controller);
 
-  parachuteTween
-    .from('#parachute', {
-      scale: 0.5,
-      opacity: 0.25,
-      rotation: -40,
-      x: '100%',
-      y: '-200%',
-    })
-    .to('#parachute', {
-      x: '30%',
-      y: '20%',
-      rotation: -30,
-    })
-    .to('#parachute', {
-      x: '-80%',
-      y: '250%',
-      rotation: 30,
-    })
+	// Parachute
 
-  new ScrollMagic.Scene({
-    triggerElement: '#friend',
-    duration: '170%',
-    triggerHook: 0,
-  })
-    .setTween(parachuteTween)
-    .addTo(controller)
+	let parachuteTween = new TimelineMax();
 
-  let typesTween = new TimelineMax()
+	parachuteTween
+		.from("#parachute", {
+			scale: 0.5,
+			opacity: 0.25,
+			rotation: -40,
+			x: "100%",
+			y: "-200%",
+		})
+		.to("#parachute", {
+			x: "30%",
+			y: "20%",
+			rotation: -30,
+		})
+		.to("#parachute", {
+			x: "-80%",
+			y: "250%",
+			rotation: 30,
+		});
 
-  typesTween.from('#types .col', {
-    scale: 0.5,
-    opacity: 0,
-    stagger: 0.25,
-  })
+	new ScrollMagic.Scene({
+		triggerElement: "#friend",
+		duration: "170%",
+		triggerHook: 0,
+	})
+		.setTween(parachuteTween)
+		.addTo(controller);
 
-  new ScrollMagic.Scene({
-    triggerElement: '#types',
-    triggerHook: 0,
-    duration: 300,
-  })
-    .setPin('#types')
-    .setTween(typesTween)
-    .addTo(controller)
-}) // when page loads
+	let typesTween = new TimelineMax();
+
+	typesTween.from("#types .col", {
+		scale: 0.5,
+		opacity: 0,
+		stagger: 0.25,
+	});
+
+	new ScrollMagic.Scene({
+		triggerElement: "#types",
+		triggerHook: 0,
+		duration: 300,
+	})
+		.setPin("#types")
+		.setTween(typesTween)
+		.addTo(controller);
+}); // when page loads
