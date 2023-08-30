@@ -6,6 +6,22 @@ $(function () {
   let monsterScroll = document.querySelectorAll('#monster-group .monster')
   let navHeight = nav.scrollHeight
 
+  // slowly zoom items with a class of .card on rollover
+  $('.card').hover(
+    function() {
+      TweenMax.to($(this), 0.5, {
+        scale: 1.05,
+        ease: Power1.easeOut,
+      })
+    },
+  function () {
+    TweenMax.to($(this), 0.5, {
+      scale: 1,
+      ease: Power1.easeOut,
+    })
+  }
+    )
+
   monsterScroll.forEach(
     (item) => (item.style.animationDelay = `${Math.random() * 1 + 0.4}s`)
   )
